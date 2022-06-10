@@ -19,12 +19,18 @@ def unlock(current_state, target_state, steps=[]):
     else:
         # generate all possible new states from the current one
         possible_next_states = get_next_states(current_state)
+        best_steps = None
         for i, next_state in enumerate(possible_next_states):
+            if len(steps) == 0:
+                print("a")
             new_step = ROTATIONS[i]
             if len(steps) > 0 and np.abs(new_step + steps[-1]).sum() == 0:
                 continue
-            return unlock(next_state, target_state, steps + [new_step])
-
+            steps_ = unlock(next_state, target_state, steps + [new_step])
+            if best_steps is None or len(steps_) < best_steps:
+                best_steps = steps_
+        return best_steps
+        
 
 if __name__ == "__main__":
     print(unlock([1, 1, 1, 1], [2, 2, 3, 3]))
